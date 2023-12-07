@@ -17,4 +17,4 @@ GUI написан на TKinter, есть возможность загружа�
 Результаты работы программы:
 
 ![image](https://github.com/Code-Snake/RRT_star/assets/120313921/e49a895a-f913-4baa-b6d6-7909ac4a6423)
-![image](https://github.com/Code-Snake/RRT_star/assets/120313921/f821b381-5a8b-4ea1-bb29-b7390ec966cc)
+![image](https://github.com/Code-Snake/RRT_star/assets/120313921/3bff8fb7-7228-4e7e-a716-567239306db7)
