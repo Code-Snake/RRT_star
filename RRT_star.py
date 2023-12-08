@@ -1,4 +1,3 @@
-
 from Graph import Graph
 from random import randint
 from math import sqrt, inf
@@ -180,13 +179,12 @@ def Steer(G,X, Y, obstacles ):
     scale_factor = randint(5,10)
     distance_xy = Length(X, Y)
 
-    # Check if the length is zero
     if distance_xy == 0:
         return X
 
     dx = (abs(Y[0] - X[0]) / distance_xy) * scale_factor
     dy = (abs(Y[1] - X[1]) / distance_xy) * scale_factor
-    Z = list(Y)  # Convert Y to a list so it can be modified
+    Z = list(Y)
     while (
             not CollisionFree(X, Z, obstacles)
             and 0 < Z[0] < X_MAX
@@ -195,7 +193,7 @@ def Steer(G,X, Y, obstacles ):
     ):
         Z[0] -= dx
         Z[1] -= dy
-    return tuple(Z)  # Convert Z back to a tuple before returning
+    return tuple(Z)
 
 def Near(G, X, k):
     distances = [(vertex, Length(X, vertex)) for vertex in G.get_vertices()]
@@ -334,7 +332,7 @@ def RRT_Star(N,k, Qinit, Qgoal,obstacles):
 
     path_vertices = shortest_path(G, Qinit, Qgoal)
 
-    #path = []
+    #path = []  #отображение результатов через matplotlib
     #for i in range(len(path_vertices) - 1):
         #path.append([path_vertices[i], path_vertices[i + 1]])
     #G.plot_edges(obstacles,path)
