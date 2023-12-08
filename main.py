@@ -85,7 +85,7 @@ class RRTStarGUI:
         B = [float(item) for item in self.B_entry.get().split(',')]
         C = [float(item) for item in self.C_entry.get().split(',')]
         self.obstacles.append(triangle(A[0],A[1],B[0],B[1],C[0],C[1]))
-        print(self.obstacles)
+        self.draw_obstacles(triangle(A[0],A[1],B[0],B[1],C[0],C[1]))
 
     def init_scene(self):
         # Initialize your scene, obstacles, and other parameters here
@@ -112,8 +112,9 @@ class RRTStarGUI:
 
     def load_scene(self):
         # Implement loading a scene from a file
-        file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
 
+        file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
+        self.clear_canvas()
         if file_path:
             with open(file_path, 'r') as file:
                 # Clear existing obstacles
@@ -129,7 +130,8 @@ class RRTStarGUI:
                             self.obstacles.append(obstacle)
 
                 # Update GUI with loaded obstacles
-                self.draw_obstacles(self.obstacles)
+                for obs in self.obstacles:
+                    self.draw_obstacles(obs)
 
                 # Read and set Qinit, Qgoal, N, and k from the file
                 file.seek(0)  # Reset file pointer to the beginning
@@ -153,6 +155,39 @@ class RRTStarGUI:
                 self.draw_Q(qinit,qgoal)
         print("Scene loaded from:", file_path)
 
+    def draw_Q(self,Qinit,Qgoal):
+        self.canvas.create_oval(Qinit[0]-5,Qinit[1]-5,Qinit[0]+5,Qinit[1]+5, fill="red", width=2)
+        self.canvas.create_oval(Qgoal[0] - 5, Qgoal[1] - 5, Qgoal[0] + 5, Qgoal[1] + 5, fill="red", width=2)
+
+    def draw_graph(self, graph):
+        # Implement drawing the graph on the canvas
+        for edge in graph.get_edges():
+            v1, v2 = edge
+            self.canvas.create_line(v1[0], v1[1], v2[0], v2[1], fill="blue")
+
+    def draw_path(self, path):
+        # Implement drawing the path on the canvas
+        for i in range(len(path) - 1):
+            v1, v2 = path[i],path[i + 1]
+            self.canvas.create_line(v1[0], v1[1], v2[0], v2[1], fill="green", width=8)
+
+    def draw_obstacles(self, obstacle):
+        # Implement drawing the obstacles on the canvas
+        self.canvas.create_polygon(
+            obstacle.x1, obstacle.y1,
+            obstacle.x2, obstacle.y2,
+            obstacle.x3, obstacle.y3,
+            fill="magenta", outline="black")
+
+    def clear_canvas(self):
+        self.canvas.delete("all")
+        self.obstacles=[]
+        self.qinit_entry.delete(0, tk.END)
+        self.qgoal_entry.delete(0, tk.END)
+        self.N_entry.delete(0, tk.END)
+        self.K_entry.delete(0, tk.END)
+        self.result.config(text="Result: ")
+
     def run_rrt_star(self):
 
         # Get Qinit and Qgoal from the entry fields
@@ -167,7 +202,7 @@ class RRTStarGUI:
         N=int(N_str)
         k=int(k_str)
         flag=True
-        self.draw_obstacles(self.obstacles)
+
         self.draw_Q(qinit, qgoal)
         for obs in self.obstacles:
             if (is_point_inside_triangle(qinit,obs.point_one,obs.point_two,obs.point_free)):
@@ -188,40 +223,6 @@ class RRTStarGUI:
             self.draw_graph(graph)
             self.draw_path(path)
 
-
-    def draw_Q(self,Qinit,Qgoal):
-        self.canvas.create_oval(Qinit[0]-5,Qinit[1]-5,Qinit[0]+5,Qinit[1]+5, fill="red", width=2)
-        self.canvas.create_oval(Qgoal[0] - 5, Qgoal[1] - 5, Qgoal[0] + 5, Qgoal[1] + 5, fill="red", width=2)
-
-    def draw_graph(self, graph):
-        # Implement drawing the graph on the canvas
-        for edge in graph.get_edges():
-            v1, v2 = edge
-            self.canvas.create_line(v1[0], v1[1], v2[0], v2[1], fill="blue")
-
-    def draw_path(self, path):
-        # Implement drawing the path on the canvas
-        for i in range(len(path) - 1):
-            v1, v2 = path[i],path[i + 1]
-            self.canvas.create_line(v1[0], v1[1], v2[0], v2[1], fill="green", width=8)
-
-    def draw_obstacles(self, obstacles):
-        # Implement drawing the obstacles on the canvas
-        for obstacle in obstacles:
-            self.canvas.create_polygon(
-                obstacle.x1, obstacle.y1,
-                obstacle.x2, obstacle.y2,
-                obstacle.x3, obstacle.y3,
-                fill="magenta", outline="black"
-            )
-
-    def clear_canvas(self):
-        self.canvas.delete("all")
-        self.obstacles=[]
-        self.qinit_entry.delete(0, tk.END)
-        self.qgoal_entry.delete(0, tk.END)
-        self.N_entry.delete(0, tk.END)
-        self.K_entry.delete(0, tk.END)
 
 
 def main():
