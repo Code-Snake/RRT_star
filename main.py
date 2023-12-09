@@ -179,13 +179,16 @@ class RRTStarGUI:
             obstacle.x3, obstacle.y3,
             fill="magenta", outline="black")
 
-    def clear_canvas(self):
+        def clear_canvas(self):
         self.canvas.delete("all")
         self.obstacles=[]
         self.qinit_entry.delete(0, tk.END)
         self.qgoal_entry.delete(0, tk.END)
         self.N_entry.delete(0, tk.END)
         self.K_entry.delete(0, tk.END)
+        self.A_entry.delete(0,tk.END)
+        self.B_entry.delete(0,tk.END)
+        self.C_entry.delete(0,tk.END)
         self.result.config(text="Result: ")
 
     def run_rrt_star(self):
